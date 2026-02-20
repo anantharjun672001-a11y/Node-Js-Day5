@@ -1,5 +1,5 @@
 import User from "../Models/user.schema.js";
-
+import bcrypt from "bcrypt";
 
 
 //Register a New User // SIGN Up User
@@ -7,7 +7,8 @@ import User from "../Models/user.schema.js";
 export const registerUser = async (req,res) =>{
     try {
         const {username,email,password} = req.body;
-        const newUser = new User({username,email,password});
+        const hashPassword = await bcrypt.hash(password,10);
+        const newUser = new User({username,email,password:hashPassword});
         await newUser.save();
         res.status(201).json({message:"User Registration successfully",data:newUser})
     } catch (error) {
